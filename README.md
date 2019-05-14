@@ -1,4 +1,4 @@
 blockconfirmationalarm
 ======================
 
-Keep track of confirmations for your bitcoin/litecoin/dogecoin transaction with desktop notifications.
+Keep track of confirmations for your bitcoin/litecoin/dogecoin/mfcoin transaction with desktop notifications.
