@@ -1,38 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/ico" href="http://www.openbitlab.com/media/favicon.ico"/>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>OpenBitLab.com - Transaction confirmation alarm</title>
+    <title>Transaction confirmation alarm</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/cover.css" rel="stylesheet">
-	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/cover.css" rel="stylesheet" />
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
   </head>
 
   <body>
       <div class="container">
         <div class="cover-container">
-          <div class="clearfix">
-            <div class="inner">
-              <h3 class="masthead-brand"></h3>
-				<ul class="nav masthead-nav">
-				  <li><a href="http://openbitlab.com" target="_blank">Openbitlab.com <i class="fa fa-arrow-right"></i></a></li>
-				</ul>
-            </div>
-          </div>
           <div align="center">
             <h1><i class="fa fa-clock-o"></i> Transaction confirmation alarm</h1>
-			<p id="desc">Tired of waiting for bitcoin/dogecoin/litecoin transaction confirmations hitting F5 all the time? This page allows you to keep tracking of 
+			<p id="desc">Tired of waiting for bitcoin/dogecoin/litecoin/mfcoin transaction confirmations hitting F5 all the time? This page allows you to keep tracking of 
 				confirmations for your bitcoin/dogecoin/litecoin transaction; after setup and after the reaching
 				of confirmation target, the page will produce a notification.</p>
 
@@ -57,19 +42,36 @@
 
 					<div class="col-sm-10">
 						<select id="txcoin" name="txcoin" class="form-control">
+						  <option>MFC</option>
 						  <option>BTC</option>
 						  <option>DOGE</option>
 						  <option>LTC</option>
-						  <option>BTCTEST</option>
-						  <option>DOGETEST</option>
-						  <option>LTCTEST</option>
 						</select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="txsound" class="col-sm-2 control-label">Sound</label>
+
+					<div class="col-sm-8">
+						<select id="txsound" name="txsound" class="form-control">
+						  <option>UFO</option>
+						  <option>Bell</option>
+						  <option>Beep</option>
+						  <option>Click</option>
+						  <option>ClickDigit</option>
+						  <option>Knock</option>
+						  <option>Crystall</option>
+						</select>
+					</div>
+					<div class="col-sm-2">
+						<a class="btn btn-primary" onclick="javascript:playSound ('beep');" style="width: 100%; max-width: 95px;">Test</a>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
-					  <div class="checkbox">
+					  <div class="checkbox text-left">
 						<label>
 						  <input type="checkbox" id="txeach" name="txeach" checked> Alarm on each new block
 						</label>
@@ -78,7 +80,7 @@
    			    </div>
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
-					  <div class="checkbox">
+					  <div class="checkbox text-left">
 						<label>
 						  <input type="checkbox" id="txbeep" name="txbeep" checked> Enable audio notification
 						</label>
@@ -102,12 +104,8 @@
 
 		  <br><br>
 		  <div align="center" style="">
-			<p>Donate BTC to <a href="https://blockchain.info/address/13gbybVyaYy5yA7Z7si2zJfo2Aat6d7c8z" target="_blank">13gbybVyaYy5yA7Z7si2zJfo2Aat6d7c8z</a></p>
-			<p align="center">&copy; 2014 OpenBitLab Team -
-				<a href="https://facebook.com/openbitlab" target="_blank"><i class="fa fa-facebook"></i> Facebook</a> -
-				<a href="https://twitter.com/OpenBitLab" target="_blank"><i class="fa fa-twitter"></i> Twitter</a> -
-				<a href="http://github.com/openbitlab" target="_blank"><i class="fa fa-github"></i> Github</a>
-			</p>
+			<p>Donate MFC to Mv7vb6eWskJd2xtfB1U97CfKEZxML65Me4</p>
+			<p align="center">&copy; 2014 OpenBitLab Team<br/>&copy; 2019 Sagleft</p>
           </div>
         </div>
     </div>
@@ -115,7 +113,8 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.classyloader.min.js"></script>
-
+	
+	<!-- todo: перенести в js файл -->
 	<script>
 		var loader; 
 		var txconf;
@@ -141,11 +140,10 @@
 			});
 		}
 
-
-
 		function playSound(soundObj) 
 		{
-			var audio = new Audio('media/beep.wav');
+			var sound_variant = $("#txsound option:selected").text();
+			var audio = new Audio('media/' + sound_variant + '.wav');
 			audio.play();
 		}
 
@@ -167,11 +165,11 @@
 		{
 			if (txcurr >= txconf)
 			{
-				notificate ("Confirmation done", 'The '+txcoin+' transaction is confirmed ('+txconf+' confirmations)', 'http://openbitlab.com/media/logo.png');
+				notificate ("Confirmation done", 'The '+txcoin+' transaction is confirmed ('+txconf+' confirmations)', 'media/logo.png');
 			}
 			else if (txeach)
 			{
-				notificate ("New confirmation", 'Reached '+txcurr+' of '+txconf+' total confirmations ('+txcoin+')', 'http://openbitlab.com/media/logo.png');
+				notificate ("New confirmation", 'Reached '+txcurr+' of '+txconf+' total confirmations ('+txcoin+')', 'media/logo.png');
 			}
 
 			updateConfirmations ();
@@ -195,8 +193,6 @@
 			loader.draw (percentage);
 		}
 
-
-
 		function updateFromHash ()
 		{
 			if (!run)
@@ -205,12 +201,28 @@
 
 				return;
 			}
-
-			$.get("https://chain.so/api/v2/is_tx_confirmed/"+txcoin+"/"+txhash, function (response)
+			
+			var api_url = "";
+			if(txcoin == "MFC") {
+				//fking cors!!
+				//api_url = "https://block2.mfcoin.net/api/getrawtransaction?txid=" + txhash + "&decrypt=1";
+				api_url = "https://api.mfc-market.ru/blockExplorerProxy.php?q=" + txhash + "&m=getrawtransaction";
+			} else {
+				api_url = "https://chain.so/api/v2/is_tx_confirmed/"+txcoin+"/"+txhash;
+			}
+			
+			$.get(api_url, function (response)
 			{
-				if (response.data.status != "fail")
-				{
-					var txcurr2 = response.data.confirmations;
+				var txcurr2 = null;
+				if(txcoin == "MFC") {
+					txcurr2 = response.confirmations;
+				} else {
+					if (response.data.status != "fail") {
+						txcurr2 = response.data.confirmations;
+					}
+				}
+				
+				if(txcurr2 != null) {
 					updateConfirmations ();
 
 					if (txcurr2 != txcurr)
@@ -219,9 +231,7 @@
 						updateConfirmations ();
 						makeNotification ();
 					}
-				}
-				else
-				{
+				} else {
 					window.clearInterval (tout);
 					updateFromConf ();
 					tout = setInterval(updateFromConf, 30000);
@@ -233,8 +243,7 @@
 				updateFromConf ();
 				tout = setInterval(updateFromConf, 30000);
 			});
-		}	
-
+		}
 
 		function updateFromConf ()
 		{
@@ -244,19 +253,32 @@
 
 				return;
 			}
-
-			$.get("https://chain.so/api/v2/get_info/"+txcoin+"/", function (response)
+			
+			if(txcoin == "MFC") {
+				//api_url = "https://block2.mfcoin.net/api/getblockcount";
+				api_url = "https://api.mfc-market.ru/blockExplorerProxy.php?m=getblockcount";
+			} else {
+				api_url = "https://chain.so/api/v2/get_info/"+txcoin+"/";
+			}
+			
+			$.get(api_url, function (response)
 			{
-				if (response.data.status != "fail")
-				{
-					var txblock = response.data.blocks;
-					var diff = 0;
-
-					if (!startblock)
+				var txblock = null;
+				var diff = 0;
+				
+				if(txcoin == "MFC") {
+					txblock = response;
+				} else {
+					if (response.data.status != "fail") {
+						txblock = response.data.blocks;
+					}
+				}
+				if(txblock != null) {
+					if (!startblock) {
 						startblock = txblock;
+					}
 
 					txcurr2 = txblock - startblock;
-
 					updateConfirmations ();
 
 					if (txcurr2 != txcurr)
@@ -267,19 +289,17 @@
 					}
 				}
 			}, "json" );
-		}	
-
+		}
 
 		$("#txsubmit").click (function ()
 		{
 			txcurr = 0;
-			txconf = $('#txconf').val ();
-			txhash = $('#txhash').val ();
-			txeach = $('#txeach').is (":checked");
-			txbeep = $('#txbeep').is (":checked");
-			txcoin = $("#txcoin option:selected").text ();
+			txconf = $('#txconf').val();
+			txhash = $('#txhash').val();
+			txeach = $('#txeach').is(":checked");
+			txbeep = $('#txbeep').is(":checked");
+			txcoin = $("#txcoin option:selected").text();
 			run = true;
-
 
 			if (isNaN(txconf) || txconf.length == 0)
 			{
@@ -287,11 +307,9 @@
 				return;
 			}
 
-
 			$('#form').css ("display", "none");
 			$('#loader').css ("display", "block");
 			$('#desc').css ("display", "none");
-
 
             loader = $('#loadercanvas').ClassyLoader({
 		            percentage: 100,
@@ -308,31 +326,14 @@
 			if (txhash.length != 0)
 			{
 				tout = setInterval(updateFromHash, 30000);
-
 				updateFromHash ();
-			}
-			else
-			{
+			} else {
 				txhash = false;
 				tout = setInterval(updateFromConf, 30000);
-
-				updateFromConf ();
-
+				updateFromConf();
 			}
-			updateConfirmations ();
+			updateConfirmations();
 		});
 	</script>
-<script>
-
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-43862044-9', 'auto', {'allowLinker': true});
-  ga('require', 'linker');
-  ga('linker:autoLink', ['openbitlab.com'] );
-  ga('send', 'pageview');
-</script>
   </body>
 </html>

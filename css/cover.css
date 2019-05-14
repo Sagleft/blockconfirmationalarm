@@ -1,6 +1,14 @@
 /*
- * Globals
- */
+* Globals
+*/
+
+a {
+ color: #a4d5ff;
+}
+
+a:hover {
+	color: #40f5ff;
+}
 
 /*
  * RSS
@@ -77,7 +85,7 @@ a:hover {
 html,
 body {
   height: 100%;
-  background-color: #333;
+  background-color: #373a7d;
 }
 body {
   color: #fff;
