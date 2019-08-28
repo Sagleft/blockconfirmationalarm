@@ -57,6 +57,12 @@
 						  <option>BTC</option>
 						  <option>DOGE</option>
 						  <option>LTC</option>
+						  <option>DGB</option>
+						  <option>GRS</option>
+						  <option>EMC2</option>
+						  <option>ONION</option>
+						  <option>XZC</option>
+						  <option>UNO</option>
 						</select>
 					</div>
 				</div>
@@ -214,24 +220,39 @@
 			}
 			
 			var api_url = "";
-			if(txcoin == "MFC") {
+			//if(txcoin == "MFC") {
 				//fking cors!!
-				//api_url = "https://block2.mfcoin.net/api/getrawtransaction?txid=" + txhash + "&decrypt=1";
-				api_url = "https://api.mfc-market.ru/blockExplorerProxy.php?q=" + txhash + "&m=getrawtransaction";
-			} else {
-				api_url = "https://chain.so/api/v2/is_tx_confirmed/"+txcoin+"/"+txhash;
+			//	api_url = "https://api.mfc-market.ru/blockExplorerProxy.php?q=" + txhash + "&m=getrawtransaction";
+			//} else {
+			//	api_url = "https://chain.so/api/v2/is_tx_confirmed/"+txcoin+"/"+txhash;
+			//}
+			
+			switch(txcoin) {
+				default:
+					//api_url = "http://chainz.cryptoid.info/ltc/api.dws?q=txinfo&t=" + txhash;
+					api_url = "https://block.mfcoin.su/chainzProxy?q=txinfo&coin=" + txcoin + "&t=" + txhash;
+					break;
+				//case "MFC":
+				//	//api_url = "https://block2.mfcoin.net/api/getrawtransaction?txid=" + txhash + "&decrypt=1";
+				//	api_url = "https://block.mfcoin.su/rawtx?txid=" + txhash;
+				//	break;
+				case "BTC":
+					//confirmations
+					api_url = "https://api.blockcypher.com/v1/btc/main/txs/" + txhash;
+					break;
 			}
 			
 			$.get(api_url, function (response)
 			{
 				var txcurr2 = null;
-				if(txcoin == "MFC") {
-					txcurr2 = response.confirmations;
-				} else {
-					if (response.data.status != "fail") {
-						txcurr2 = response.data.confirmations;
-					}
-				}
+				//if(txcoin == "MFC") {
+				//	txcurr2 = response.confirmations;
+				//} else {
+				//	if (response.data.status != "fail") {
+				//		txcurr2 = response.data.confirmations;
+				//	}
+				//}
+				txcurr2 = response.confirmations;
 				
 				if(txcurr2 != null) {
 					updateConfirmations ();
@@ -265,25 +286,32 @@
 				return;
 			}
 			
-			if(txcoin == "MFC") {
-				//api_url = "https://block2.mfcoin.net/api/getblockcount";
-				api_url = "https://api.mfc-market.ru/blockExplorerProxy.php?m=getblockcount";
-			} else {
-				api_url = "https://chain.so/api/v2/get_info/"+txcoin+"/";
+			switch(txcoin) {
+				default:
+					//api_url = "https://chainz.cryptoid.info/" + txcoin.toLowerCase() + "/api.dws?q=getblockcount";
+					api_url = "https://block.mfcoin.su/chainzProxy?q=getblockcount&coin=" + txcoin;
+					break;
+				//case "MFC":
+				//	api_url = "https://api.mfc-market.ru/blockExplorerProxy.php?m=getblockcount";
+				//	break;
+				case "BTC":
+					api_url = "https://blockchain.info/q/getblockcount";
+					break;
 			}
 			
+			//TOQ: рефакторинг
 			$.get(api_url, function (response)
 			{
 				var txblock = null;
 				var diff = 0;
 				
-				if(txcoin == "MFC") {
+				//if(txcoin == "MFC") {
 					txblock = response;
-				} else {
-					if (response.data.status != "fail") {
-						txblock = response.data.blocks;
-					}
-				}
+				//} else {
+				//	if (response.data.status != "fail") {
+				//		txblock = response.data.blocks;
+				//	}
+				//}
 				if(txblock != null) {
 					if (!startblock) {
 						startblock = txblock;
